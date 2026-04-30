@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =====================================================
+// Modèle UTILISATEUR
+// =====================================================
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations vers les autres tables
+  preferences    UserPreferences?
+  mediaItems     UserMediaItem[]
+  searchHistory  SearchHistory[]
+}
+
+// =====================================================
+// PRÉFÉRENCES de l'utilisateur (genres, plateformes)
+// =====================================================
+model UserPreferences {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Genres préférés stockés en JSON par catégorie
+  // ex : { "games": ["RPG", "Aventure"], "movies": ["SF"], ... }
+  genres     Json @default("{}")
+  platforms  Json @default("[]")
+
+  updatedAt DateTime @updatedAt
+}
+
+// =====================================================
+// LIEN entre un utilisateur et une œuvre
+// (watchlist, favori, vu, masqué)
+// =====================================================
+model UserMediaItem {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Référence vers l'œuvre dans l'API externe
+  mediaSource    MediaSource
+  mediaType      MediaType
+  externalId     String
+
+  // Type d'interaction : WATCHLIST, FAVORITE, SEEN, HIDDEN
+  itemType       MediaItemType
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, mediaSource, externalId, itemType])
+  @@index([userId, itemType])
+}
+
+// =====================================================
+// HISTORIQUE des recherches récentes
+// =====================================================
+model SearchHistory {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  query     String
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+// =====================================================
+// ÉNUMÉRATIONS (listes de valeurs autorisées)
+// =====================================================
+enum MediaSource {
+  IGDB      // jeux vidéo
+  TMDB      // films & séries
+  ANILIST   // animes
+}
+
+enum MediaType {
+  GAME
+  MOVIE
+  SERIES
+  ANIME
+}
+
+enum MediaItemType {
+  WATCHLIST
+  FAVORITE
+  SEEN
+  HIDDEN
+}
