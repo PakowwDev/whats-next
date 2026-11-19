@@ -1,30 +1,29 @@
-import { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import MediaDetail from './pages/MediaDetail';
+import Profile from './pages/Profile';
+import OnboardingGenres from './pages/OnboardingGenres';
+import OnboardingPlatforms from './pages/OnboardingPlatforms';
+import SearchResults from './pages/SearchResults';
+import About from './pages/About';
+import Legal from './pages/Legal';
 
 function App() {
-  const [message, setMessage] = useState('Chargement...');
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    // Au démarrage du composant, on appelle le backend
-    fetch('http://localhost:3000/api/hello')
-      .then((response) => response.json())
-      .then((data) => setMessage(data.message))
-      .catch((err) => setError('Impossible de joindre le backend : ' + err.message));
-  }, []);
-
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-6">
-      <h1 className="text-5xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-500 bg-clip-text text-transparent">
-        What's Next?
-      </h1>
-      <div className="text-center">
-        {error ? (
-          <p className="text-red-400">{error}</p>
-        ) : (
-          <p className="text-violet-300 text-lg">{message}</p>
-        )}
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/onboarding/genres" element={<OnboardingGenres />} />
+      <Route path="/onboarding/platforms" element={<OnboardingPlatforms />} />
+      <Route path="/search" element={<SearchResults />} />
+      <Route path="/media/:source/:type/:id" element={<MediaDetail />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/a-propos" element={<About />} />
+      <Route path="/mentions-legales" element={<Legal />} />
+    </Routes>
   );
 }
 

@@ -1,1 +1,61 @@
 @import "tailwindcss";
+
+/* =====================================================
+   PALETTE — thème sombre (par défaut)
+   ===================================================== */
+:root,
+:root[data-theme="dark"] {
+  --bg: #0A0612;
+  --surface: #13091F;
+  --surface-2: #1F1632;
+  --border: #2D2147;
+  --border-subtle: #1F1632;
+  --text: #E8E6F5;
+  --text-muted: #9D94C4;
+  --text-dim: #6B6385;
+  --header-bg: rgba(10, 6, 18, 0.9);
+}
+
+/* =====================================================
+   PALETTE — thème clair
+   Les accents violet et magenta restent identiques :
+   ils portent l'identité du site.
+   ===================================================== */
+:root[data-theme="light"] {
+  --bg: #F5F3F7;
+  --surface: #FFFFFF;
+  --surface-2: #E8E4EF;
+  --border: #D5CFE0;
+  --border-subtle: #E2DDEA;
+  --text: #1A1226;
+  --text-muted: #5C5379;
+  --text-dim: #7A7290;
+  --header-bg: rgba(245, 243, 247, 0.9);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* =====================================================
+   ACCESSIBILITÉ
+   ===================================================== */
+
+/* Taille du texte */
+html[data-text-size="small"]  { font-size: 14px; }
+html[data-text-size="normal"] { font-size: 16px; }
+html[data-text-size="large"]  { font-size: 19px; }
+
+/* Mode dyslexique */
+html[data-dyslexic="true"] * {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important;
+  letter-spacing: 0.04em;
+  word-spacing: 0.1em;
+  line-height: 1.7;
+}
+
+/* Contraste élevé */
+html[data-high-contrast="true"] {
+  filter: contrast(1.3);
+}
